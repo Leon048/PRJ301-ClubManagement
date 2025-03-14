@@ -31,23 +31,6 @@
 </head>
 <body class="bg-light">
 
-<!-- Thanh điều hướng -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="home.jsp">Trang chủ</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="event-list.jsp">Sự kiện</a></li>
-                <li class="nav-item"><a class="nav-link" href="manage-members.jsp">Quản lý thành viên</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="logout">Đăng xuất</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
 <!-- Nội dung trang -->
 <div class="container mt-5">
     <h2 class="text-center">Thêm Thành Viên Mới</h2>

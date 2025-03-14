@@ -291,4 +291,29 @@ public class UserDAO {
         return false;
     }
 
+    public List<User> getMembersByClubId(int clubId) {
+        List<User> members = new ArrayList<>();
+        String sql = "SELECT UserID, FullName, Email, Password, Role, ClubID FROM Users WHERE ClubID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, clubId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                members.add(new User(
+                        rs.getInt("UserID"),
+                        rs.getString("FullName"),
+                        rs.getString("Email"),
+                        rs.getString("Password"),
+                        rs.getString("Role"),
+                        rs.getInt("ClubID")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return members;
+    }
+
 }

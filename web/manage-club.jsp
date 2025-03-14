@@ -51,6 +51,7 @@
         </div>
 
         <!-- Nút chỉnh sửa thông tin câu lạc bộ -->
+        <% if ("Chairman".equals(role)||"ViceChairman".equals(role)) { %>
         <div class="d-flex justify-content-end mt-3">
             <a href="edit-club.jsp?clubId=<%= club.getClubId() %>" class="btn btn-warning">Chỉnh sửa thông tin</a>
         </div>
@@ -60,6 +61,7 @@
         <div class="text-center">
             <a href="manage-members.jsp?clubId=<%= club.getClubId() %>" class="btn btn-primary">Xem danh sách thành viên</a>
         </div>
+        <% } %>
     </div>
 
     <%@ include file="footer.jsp" %>

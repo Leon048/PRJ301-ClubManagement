@@ -11,7 +11,7 @@
 <%
     // Kiểm tra quyền Admin
     String role = (String) session.getAttribute("role");
-    if (role == null || !"Admin".equals(role)) {
+    if (role == null ) {
         response.sendRedirect("unauthorized.jsp");
         return;
     }
@@ -71,7 +71,12 @@
             </form>
 
             <div class="text-center mt-3">
+                <% if ("Admin".equals(role)) { %>
                 <a href="manage-clubs.jsp" class="btn btn-secondary">Quay lại</a>
+                <% } %>
+                <% if ("Chairman".equals(role)) { %>
+                <a href="manage-club.jsp" class="btn btn-secondary">Quay lại</a>
+                <% } %>
             </div>
         </div>
 

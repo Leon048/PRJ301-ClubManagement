@@ -3,16 +3,18 @@
 <%@ page import="java.util.List, dao.UserDAO, model.User" %>
 
 <%
-    // Kiểm tra quyền truy cập (Chỉ Admin, Chủ nhiệm, Phó chủ nhiệm)
+    // Kiểm tra quyền truy cập (Chỉ Chairman)
     String role = (String) session.getAttribute("role");
-    if (role == null || (!"Admin".equals(role) && !"Chairman".equals(role) && !"ViceChairman".equals(role))) {
+    Integer clubId = (Integer) session.getAttribute("clubId");
+
+    if (role == null || !"Chairman".equals(role) || clubId == null || clubId <= 0) {
         response.sendRedirect("unauthorized.jsp");
         return;
     }
 
-    // Lấy danh sách thành viên từ UserDAO
+    // Lấy danh sách thành viên của câu lạc bộ mà Chairman đang quản lý
     UserDAO userDAO = new UserDAO();
-    List<User> members = userDAO.getAllMembers();
+    List<User> members = userDAO.getMembersByClubId(clubId);
 %>
 
 <!DOCTYPE html>
@@ -27,7 +29,7 @@
     <%@ include file="header.jsp" %>
 
     <div class="container mt-5">
-        <h2 class="text-center">Quản lý thành viên</h2>
+        <h2 class="text-center">Quản lý thành viên trong câu lạc bộ</h2>
 
         <!-- Nút thêm thành viên -->
         <div class="d-flex justify-content-end mb-3">
@@ -43,7 +45,6 @@
                         <th>Họ và tên</th>
                         <th>Email</th>
                         <th>Vai trò</th>
-                        <th>Câu lạc bộ</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -54,13 +55,10 @@
                         <td><%= member.getFullName() %></td>
                         <td><%= member.getEmail() %></td>
                         <td><%= member.getRole() %></td>
-                        <td><%= (member.getClubId() != 0) ? member.getClubName() : "Không có CLB" %></td>
                         <td>
-                            <% if ("Admin".equals(role) || "Chairman".equals(role) || "ViceChairman".equals(role)) { %>
                             <a href="update-member.jsp?userId=<%= member.getUserId() %>" class="btn btn-warning btn-sm">Sửa</a>
                             <a href="delete-member?userId=<%= member.getUserId() %>" class="btn btn-danger btn-sm"
                                onclick="return confirm('Bạn có chắc muốn xóa thành viên này?');">Xóa</a>
-                            <% } %>
                         </td>
                     </tr>
                     <% } %>
