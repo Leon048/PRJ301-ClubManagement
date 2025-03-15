@@ -69,9 +69,10 @@ public class UpdateUserServlet extends HttpServlet {
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Nhận dữ liệu từ form
             int userId = Integer.parseInt(request.getParameter("userId"));
             String fullName = request.getParameter("fullName");
-            String password = request.getParameter("password");
+            String password = request.getParameter("password"); // Mật khẩu mới (có thể null)
             String role = request.getParameter("role");
             int clubId = Integer.parseInt(request.getParameter("clubId"));
 
@@ -82,20 +83,24 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
 
             // Gọi DAO để cập nhật thông tin người dùng
             UserDAO userDAO = new UserDAO();
-            boolean success = userDAO.updateUser(new User(userId, fullName, password, role, clubId));
+            boolean success = userDAO.updateUser(new User(userId, fullName, null, password, role, clubId, null));
 
             if (success) {
-                response.sendRedirect("manage-users.jsp?success=Cập nhật thành viên thành công!");
+                response.sendRedirect("update-user.jsp?userId=" + userId + "&success=Cập nhật thành công!");
             } else {
-                request.setAttribute("error", "Lỗi khi cập nhật thành viên.");
+                request.setAttribute("error", "Lỗi khi cập nhật người dùng.");
                 request.getRequestDispatcher("update-user.jsp?userId=" + userId).forward(request, response);
             }
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("error", e.getMessage());
+            request.getRequestDispatcher("update-user.jsp?userId=" + request.getParameter("userId")).forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi. Vui lòng thử lại!");
-            request.getRequestDispatcher("update-user.jsp").forward(request, response);
+            request.getRequestDispatcher("update-user.jsp?userId=" + request.getParameter("userId")).forward(request, response);
         }
     }
+
 
     /** 
      * Returns a short description of the servlet.

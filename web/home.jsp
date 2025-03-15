@@ -51,9 +51,9 @@
 <!--                <div class="col-md-4">
                     <div class="card shadow-lg">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Hồ sơ cá nhân</h5>
-                            <p class="card-text">Cập nhật thông tin cá nhân.</p>
-                            <a href="profile.jsp" class="btn btn-primary">Cập nhật</a>
+                            <h5 class="card-title">Báo cáo</h5>
+                            <p class="card-text">Cập nhật thông tin.</p>
+                            <a href="reports.jsp" class="btn btn-primary">Cập nhật</a>
                         </div>
                     </div>
                 </div>-->

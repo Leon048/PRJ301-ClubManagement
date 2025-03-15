@@ -10,7 +10,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <!-- Logo / Trang chủ -->
-        <a class="navbar-brand" href="home.jsp">Club Management</a>
+        <a class="navbar-brand" href="home.jsp">Home</a>
         
         <!-- Nút Toggle trên Mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -19,19 +19,21 @@
         </button>
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <!-- Phần trống bên trái để giữ khoảng cách -->
+            <!-- Khoảng trống giữ bố cục navbar -->
             <div></div>
 
-            <!-- Lời chào & Nút đăng xuất bên phải -->
+            <!-- Lời chào, nút Hồ sơ & Đăng xuất -->
             <div class="ms-auto d-flex align-items-center">
                 <span class="navbar-text me-3">
                     Xin chào, <%= (session.getAttribute("fullName") != null) ? session.getAttribute("fullName") : "Người dùng" %>!
                 </span>
+                <a href="profile.jsp" class="btn btn-info btn-sm me-2">Hồ sơ</a>
                 <a href="logout" class="btn btn-danger btn-sm">Đăng xuất</a>
             </div>
         </div>
     </div>
 </nav>
+
 
 
 

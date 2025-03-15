@@ -9,9 +9,9 @@
 <%@ page import="java.util.List, dao.ReportDAO, model.Report" %>
 
 <%
-    // Kiểm tra quyền Admin
+    // Kiểm tra quyền Admin || !"Admin".equals(role)
     String role = (String) session.getAttribute("role");
-    if (role == null || !"Admin".equals(role)) {
+    if (role == null ) {
         response.sendRedirect("unauthorized.jsp");
         return;
     }

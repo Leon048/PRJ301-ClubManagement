@@ -55,22 +55,37 @@ public class DeleteEventServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Kiểm tra quyền Admin hoặc Chủ nhiệm
+        HttpSession session = request.getSession(false);
+        String role = (session != null) ? (String) session.getAttribute("role") : null;
+        if (role == null || (!"Admin".equals(role) && !"Chairman".equals(role))) {
+            response.sendRedirect("unauthorized.jsp");
+            return;
+        }
+
         try {
+            // Lấy eventId từ request
             int eventId = Integer.parseInt(request.getParameter("eventId"));
 
+            // Gọi DAO để xóa sự kiện
             EventDAO eventDAO = new EventDAO();
             boolean success = eventDAO.deleteEvent(eventId);
 
             if (success) {
                 response.sendRedirect("manage-events.jsp?success=Xóa sự kiện thành công!");
             } else {
-                response.sendRedirect("manage-events.jsp?error=Không thể xóa sự kiện này.");
+                request.setAttribute("error", "Không thể xóa sự kiện. Có thể có người đã đăng ký tham gia.");
+                request.getRequestDispatcher("manage-events.jsp").forward(request, response);
             }
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "ID sự kiện không hợp lệ.");
+            request.getRequestDispatcher("manage-events.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("manage-events.jsp?error=Đã xảy ra lỗi. Vui lòng thử lại!");
+            request.setAttribute("error", "Đã xảy ra lỗi. Vui lòng thử lại!");
+            request.getRequestDispatcher("manage-events.jsp").forward(request, response);
         }
     }
 

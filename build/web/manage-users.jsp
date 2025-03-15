@@ -18,7 +18,7 @@
 
     // Lấy danh sách người dùng từ UserDAO
     UserDAO userDAO = new UserDAO();
-    List<User> users = userDAO.getAllUsers(); // Phương thức cần có trong UserDAO
+    List<User> users = userDAO.getAllUsersWithClubName(); // Phương thức mới trong UserDAO
 %>
 
 <!DOCTYPE html>
@@ -60,7 +60,7 @@
                         <td><%= user.getFullName() %></td>
                         <td><%= user.getEmail() %></td>
                         <td><%= user.getRole() %></td>
-                        <td><%= (user.getClubId() > 0) ? user.getClubId() : "Không có CLB" %></td>
+                        <td><%= (user.getClubName() != null) ? user.getClubName() : "Không có CLB" %></td>
                         <td>
                             <a href="update-user.jsp?userId=<%= user.getUserId() %>" class="btn btn-warning btn-sm">Sửa</a>
                             <a href="delete-user?userId=<%= user.getUserId() %>" class="btn btn-danger btn-sm" 

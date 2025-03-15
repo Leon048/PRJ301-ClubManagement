@@ -1,6 +1,6 @@
 <%-- 
     Document   : add-event
-    Created on : Mar 13, 2025, 10:02:50 PM
+    Created on : Mar 16, 2025, 5:57:13 AM
     Author     : admin
 --%>
 
@@ -76,11 +76,9 @@
         </form>
 
         <div class="text-center mt-3">
-            <a href="manage-events.jsp" class="btn btn-secondary">Quay lại</a>
+            <a href="event-list.jsp" class="btn btn-secondary">Quay lại</a>
         </div>
     </div>
-
- 
+                
 </body>
 </html>
-

@@ -11,10 +11,10 @@
 <%
     // Kiểm tra quyền truy cập (Chỉ Admin có quyền chỉnh sửa)
     String role = (String) session.getAttribute("role");
-    if (role == null || !"Admin".equals(role)) {
-        response.sendRedirect("unauthorized.jsp");
-        return;
-    }
+//    if (role == null || !"Admin".equals(role)) {
+//        response.sendRedirect("unauthorized.jsp");
+//        return;
+//    }
 
     // Lấy userId từ request
     int userId = Integer.parseInt(request.getParameter("userId"));
@@ -32,6 +32,10 @@
     // Lấy danh sách câu lạc bộ
     ClubDAO clubDAO = new ClubDAO();
     List<Club> clubs = clubDAO.getAllClubs();
+
+    // Lấy thông báo cập nhật thành công nếu có
+    String successMessage = request.getParameter("success");
+    String errorMessage = request.getParameter("error");
 %>
 
 <!DOCTYPE html>
@@ -43,15 +47,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
-   
 
     <div class="container mt-5">
         <h2 class="text-center">Chỉnh sửa Người Dùng</h2>
 
+        <%-- Hiển thị thông báo thành công --%>
+        <% if (successMessage != null) { %>
+            <div class="alert alert-success text-center">
+                <strong><%= successMessage %></strong>
+            </div>
+        <% } %>
+
         <%-- Hiển thị thông báo lỗi nếu có --%>
-        <% String error = request.getParameter("error"); %>
-        <% if (error != null) { %>
-            <div class="alert alert-danger"><%= error %></div>
+        <% if (errorMessage != null) { %>
+            <div class="alert alert-danger"><%= errorMessage %></div>
         <% } %>
 
         <form action="update-user" method="post" class="card p-4 shadow-lg">
@@ -98,12 +107,17 @@
         </form>
 
         <div class="text-center mt-3">
-            <a href="manage-users.jsp" class="btn btn-secondary">Quay lại</a>
+                <% if ("Admin".equals(role)) { %>
+                <a href="manage-users.jsp" class="btn btn-secondary">Quay lại</a>
+                <% } %>
+                <% if ("Chairman".equals(role)||"Member".equals(role)) { %>
+                <a href="profile.jsp" class="btn btn-secondary">Quay lại</a>
+                <% } %>
         </div>
     </div>
 
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
+
 

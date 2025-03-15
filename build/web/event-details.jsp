@@ -38,61 +38,49 @@
 
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sự kiện</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="bg-light">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chi tiết sự kiện</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    </head>
+    <body class="bg-light">
 
 
-<!-- Nội dung trang -->
-<div class="container mt-5">
-    <h2 class="text-center">Chi tiết sự kiện</h2>
+        <!-- Nội dung trang -->
+        <div class="container mt-5">
+            <h2 class="text-center">Chi tiết sự kiện</h2>
 
-    <div class="card p-4 shadow-lg">
-        <h4 class="mb-3">Thông tin sự kiện</h4>
-        <p><strong>Tên sự kiện:</strong> <%= event.getEventName() %></p>
-        <p><strong>Mô tả:</strong> <%= event.getDescription() %></p>
-        <p><strong>Ngày tổ chức:</strong> <%= event.getEventDate() %></p>
-        <p><strong>Địa điểm:</strong> <%= event.getLocation() %></p>
-        <p><strong>Câu lạc bộ tổ chức:</strong> <%= event.getClubName() %></p>
+            <div class="card p-4 shadow-lg">
+                <h4 class="mb-3">Thông tin sự kiện</h4>
+                <p><strong>Tên sự kiện:</strong> <%= event.getEventName() %></p>
+                <p><strong>Mô tả:</strong> <%= event.getDescription() %></p>
+                <p><strong>Ngày tổ chức:</strong> <%= event.getEventDate() %></p>
+                <p><strong>Địa điểm:</strong> <%= event.getLocation() %></p>
+                <p><strong>Câu lạc bộ tổ chức:</strong> <%= event.getClubName() %></p>
+            </div>
 
-        <%-- Kiểm tra quyền của người dùng --%>
-        <% if ("Admin".equals(role) || "Chairman".equals(role) || "ViceChairman".equals(role)) { %>
-            <a href="edit-event.jsp?eventId=<%= event.getEventId() %>" class="btn btn-warning">Sửa</a>
-            <a href="delete-event?eventId=<%= event.getEventId() %>" class="btn btn-danger"
-               onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?');">Xóa</a>
-        <% } %>
-
-        <%-- Thành viên có thể đăng ký/hủy đăng ký --%>
-        <% if ("Member".equals(role)) { %>
-            <% boolean isRegistered = eventRegDAO.isUserRegistered(userId, event.getEventId()); %>
-            <% if (isRegistered) { %>
-                <a href="unregister-event?eventId=<%= event.getEventId() %>" class="btn btn-danger"
-                   onclick="return confirm('Bạn có chắc muốn hủy đăng ký?');">Hủy đăng ký</a>
-            <% } else { %>
-                <a href="register-event?eventId=<%= event.getEventId() %>" class="btn btn-success">Đăng ký tham gia</a>
+            <div class="card p-4 shadow-lg mt-4">
+                <h4 class="mb-3">Danh sách người tham gia</h4>
+                <ul>
+                    <% for (String participant : participants) { %>
+                    <li><%= participant %></li>
+                        <% } %>
+                </ul>
+            </div>
+            <% if ("Member".equals(role)||"Chairman".equals(role)) { %>
+            <div class="text-center mt-4">
+                <a href="event-list.jsp" class="btn btn-secondary">Quay lại</a>
+            </div>
             <% } %>
-        <% } %>
-    </div>
-
-    <div class="card p-4 shadow-lg mt-4">
-        <h4 class="mb-3">Danh sách người tham gia</h4>
-        <ul>
-            <% for (String participant : participants) { %>
-                <li><%= participant %></li>
+             <% if ("Admin".equals(role)) { %>
+            <div class="text-center mt-4">
+                <a href="event-lists.jsp" class="btn btn-secondary">Quay lại</a>
+            </div>
             <% } %>
-        </ul>
-    </div>
+        </div>
 
-    <div class="text-center mt-4">
-        <a href="event-list.jsp" class="btn btn-secondary">Quay lại</a>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>
 

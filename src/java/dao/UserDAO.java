@@ -9,6 +9,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserDAO {
+    
+    public boolean registerUser(User user) {
+    String sql = "INSERT INTO Users (FullName, Email, Password, Role, ClubID) VALUES (?, ?, ?, ?, ?)";
+
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, user.getFullName());
+        ps.setString(2, user.getEmail());
+        ps.setString(3, user.getPassword()); // Mật khẩu có thể hash sau
+        ps.setString(4, "Member"); // Mặc định tất cả user đăng ký là Member
+        ps.setInt(5, user.getClubId()); // CLB mà user chọn
+
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
+}
+
 
     public User validateUser(String email, String password) {
         String sql = "SELECT UserID, FullName, Email, Role, ClubID FROM Users WHERE Email = ? AND Password = ?";
@@ -54,6 +74,32 @@ public class UserDAO {
         }
         return user;
     }
+public List<User> getAllUsersWithClubName() {
+    List<User> users = new ArrayList<>();
+    String sql = "SELECT u.UserID, u.FullName, u.Email, u.Role, u.ClubID, c.ClubName " +
+                 "FROM Users u LEFT JOIN Clubs c ON u.ClubID = c.ClubID";
+
+    try (Connection conn = DBContext.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            users.add(new User(
+                rs.getInt("UserID"),
+                rs.getString("FullName"),
+                rs.getString("Email"),
+                null, // Không cần lấy mật khẩu
+                rs.getString("Role"),
+                rs.getInt("ClubID"),
+                rs.getString("ClubName") // Lấy tên câu lạc bộ
+            ));
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return users;
+}
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
@@ -90,62 +136,67 @@ public class UserDAO {
         return false;
     }
 
-    public User getUserById(int userId) {
-        User user = null;
-        String sql = "SELECT * FROM Users WHERE UserID = ?";
+public User getUserById(int userId) {
+    User user = null;
+    String sql = "SELECT u.UserID, u.FullName, u.Email, u.Password, u.Role, u.ClubID, c.ClubName " +
+                 "FROM Users u LEFT JOIN Clubs c ON u.ClubID = c.ClubID " +
+                 "WHERE u.UserID = ?";
 
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+    try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
 
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                user = new User(
-                        rs.getInt("UserID"),
-                        rs.getString("FullName"),
-                        rs.getString("Email"),
-                        rs.getString("Password"),
-                        rs.getString("Role"),
-                        rs.getInt("ClubID")
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            user = new User(
+                rs.getInt("UserID"),
+                rs.getString("FullName"),
+                rs.getString("Email"),
+                rs.getString("Password"),
+                rs.getString("Role"),
+                rs.getInt("ClubID"),
+                rs.getString("ClubName") // Thêm tên câu lạc bộ
+            );
         }
-        return user;
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return user;
+}
+
+
+public boolean updateUser(User user) {
+    String sql;
+    boolean hasPassword = (user.getPassword() != null && !user.getPassword().isEmpty());
+
+    if (hasPassword) {
+        sql = "UPDATE Users SET FullName = ?, Password = ?, Role = ?, ClubID = ? WHERE UserID = ?";
+    } else {
+        sql = "UPDATE Users SET FullName = ?, Role = ?, ClubID = ? WHERE UserID = ?";
     }
 
-    public boolean updateUser(User user) {
-        String updateSQL;
-        boolean updatePassword = (user.getPassword() != null && !user.getPassword().trim().isEmpty());
+    try (Connection conn = DBContext.getConnection(); 
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        if (updatePassword) {
-            updateSQL = "UPDATE Users SET FullName = ?, Password = ?, Role = ?, ClubID = ? WHERE UserID = ?";
+        ps.setString(1, user.getFullName());
+
+        if (hasPassword) {
+            ps.setString(2, user.getPassword()); // Cập nhật mật khẩu mới
+            ps.setString(3, user.getRole());
+            ps.setInt(4, user.getClubId());
+            ps.setInt(5, user.getUserId());
         } else {
-            updateSQL = "UPDATE Users SET FullName = ?, Role = ?, ClubID = ? WHERE UserID = ?";
+            ps.setString(2, user.getRole());
+            ps.setInt(3, user.getClubId());
+            ps.setInt(4, user.getUserId());
         }
 
-        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(updateSQL)) {
-
-            ps.setString(1, user.getFullName());
-
-            if (updatePassword) {
-                ps.setString(2, user.getPassword());
-                ps.setString(3, user.getRole());
-                ps.setInt(4, user.getClubId());
-                ps.setInt(5, user.getUserId());
-            } else {
-                ps.setString(2, user.getRole());
-                ps.setInt(3, user.getClubId());
-                ps.setInt(4, user.getUserId());
-            }
-
-            return ps.executeUpdate() > 0; // Trả về true nếu cập nhật thành công
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return ps.executeUpdate() > 0; // Trả về true nếu cập nhật thành công
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return false;
+}
+
 
     public boolean deleteUser(int userId) {
         String sql = "DELETE FROM Users WHERE UserID = ?";

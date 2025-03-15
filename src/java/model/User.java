@@ -26,6 +26,16 @@ public class User {
         this.clubName = clubName;
     }
 
+    public User(int userId, String fullName, String email, String password, String role, int clubId, String clubName) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.clubId = clubId;
+        this.clubName = clubName;
+    }
+
     public User(int userId, String fullName, String password, String role, int clubId) {
         this.userId = userId;
         this.fullName = fullName;

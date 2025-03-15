@@ -8,6 +8,7 @@ import java.util.List;
 import model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 public class EventDAO {
 
     // Lấy danh sách tất cả sự kiện
@@ -58,6 +59,32 @@ public class EventDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Event> getEventsByClubId(int clubId) {
+        List<Event> events = new ArrayList<>();
+        String sql = "SELECT e.EventID, e.EventName, e.Description, e.EventDate, e.Location, c.ClubName "
+                + "FROM Events e JOIN Clubs c ON e.ClubID = c.ClubID WHERE e.ClubID = ?";
+
+        try (Connection conn = DBContext.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, clubId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                events.add(new Event(
+                        rs.getInt("EventID"),
+                        rs.getString("EventName"),
+                        rs.getString("Description"),
+                        rs.getDate("EventDate"),
+                        rs.getString("Location"),
+                        rs.getString("ClubName") // Lấy tên câu lạc bộ từ bảng Clubs
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
     }
 
     // Thêm một sự kiện mới

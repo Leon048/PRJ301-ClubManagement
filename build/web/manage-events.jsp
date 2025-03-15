@@ -37,7 +37,7 @@
 
         <!-- Nút thêm sự kiện -->
         <div class="d-flex justify-content-end mb-3">
-            <a href="add-event.jsp" class="btn btn-success">Thêm Sự Kiện</a>
+            <a href="add-events.jsp" class="btn btn-success">Thêm Sự Kiện</a>
         </div>
 
         <!-- Hiển thị danh sách sự kiện -->
@@ -62,7 +62,7 @@
                         <td><%= event.getLocation() %></td>
                         <td><%= (event.getClubName() != null) ? event.getClubName() : "Không xác định" %></td>
                         <td>
-                            <a href="edit-event.jsp?eventId=<%= event.getEventId() %>" class="btn btn-warning btn-sm">Sửa</a>
+                            <a href="update-event.jsp?eventId=<%= event.getEventId() %>" class="btn btn-warning btn-sm">Sửa</a>
                             <a href="delete-event?eventId=<%= event.getEventId() %>" class="btn btn-danger btn-sm"
                                onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?');">Xóa</a>
                         </td>

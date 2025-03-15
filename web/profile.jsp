@@ -5,30 +5,26 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page session="true" %>
-<%@ page import="dao.UserDAO, dao.ClubDAO, model.User, model.Club" %>
+<%@ page import="dao.UserDAO, model.User" %>
 
 <%
-    // Kiểm tra session có email không
-    String email = (String) session.getAttribute("email");
-    if (email == null) {
+    // Kiểm tra người dùng đã đăng nhập chưa
+    Integer userId = (Integer) session.getAttribute("userId");
+    if (userId == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 
-    // Lấy thông tin người dùng từ UserDAO
+    // Lấy thông tin người dùng từ database
     UserDAO userDAO = new UserDAO();
-    User user = userDAO.getUserByEmail(email);
+    User user = userDAO.getUserById(userId);
 
-    // Nếu user không tồn tại, hiển thị lỗi thay vì mất session
+    // Nếu không tìm thấy user, đăng xuất và yêu cầu đăng nhập lại
     if (user == null) {
-        request.setAttribute("error", "Không tìm thấy tài khoản! Vui lòng thử lại.");
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        session.invalidate();
+        response.sendRedirect("login.jsp?error=Tài khoản không tồn tại!");
         return;
     }
-
-    // Lấy thông tin câu lạc bộ của người dùng (nếu có)
-//    ClubDAO clubDAO = new ClubDAO();
-//    Club club = (user.getClubId() > 0) ? clubDAO.getClubById(user.getClubId()) : null;
 %>
 
 <!DOCTYPE html>
@@ -36,52 +32,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin tài khoản</title>
+    <title>Thông tin cá nhân</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
-<body>
-    <%@ include file="header.jsp" %>
+<body class="bg-light">
 
     <div class="container mt-5">
-        <h2 class="text-center">Thông tin tài khoản</h2>
+        <h2 class="text-center">Thông tin cá nhân</h2>
 
-        <%-- Hiển thị thông báo lỗi nếu có --%>
-        <% String error = request.getParameter("error"); %>
-        <% if (error != null) { %>
-            <div class="alert alert-danger"><%= error %></div>
-        <% } %>
+        <div class="card p-4 shadow-lg">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Họ và tên:</label>
+                <p class="form-control-plaintext"><%= user.getFullName() %></p>
+            </div>
 
-        <div class="card shadow-lg p-4">
-            <table class="table table-bordered">
-                <tr>
-                    <th style="width: 30%;">ID:</th>
-                    <td><%= user.getUserId() %></td>
-                </tr>
-                <tr>
-                    <th>Họ và tên:</th>
-                    <td><%= user.getFullName() %></td>
-                </tr>
-                <tr>
-                    <th>Email:</th>
-                    <td><%= user.getEmail() %></td>
-                </tr>
-                <tr>
-                    <th>Vai trò:</th>
-                    <td><%= user.getRole() %></td>
-                </tr>
-                <tr>
-                    <th>Câu lạc bộ:</th>
-                    <td><%= (user != null) ? user.getClubId() : "Không tham gia CLB" %></td>
-                </tr>
-            </table>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Email:</label>
+                <p class="form-control-plaintext"><%= user.getEmail() %></p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Vai trò:</label>
+                <p class="form-control-plaintext"><%= user.getRole() %></p>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Câu lạc bộ:</label>
+                <p class="form-control-plaintext"><%= (user.getClubName() != null) ? user.getClubName() : "Không có CLB" %></p>
+            </div>
         </div>
 
         <div class="text-center mt-3">
+            <a href="update-user.jsp?userId=<%= userId %>" class="btn btn-primary">Chỉnh sửa hồ sơ</a>
             <a href="home.jsp" class="btn btn-secondary">Quay lại</a>
         </div>
     </div>
 
-    <%@ include file="footer.jsp" %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
