@@ -3,14 +3,8 @@
 <%@ page import="dao.UserDAO, java.util.List" %>
 
 <%
-    // Kiểm tra người dùng đã đăng nhập chưa
     String fullName = (String) session.getAttribute("fullName");
     String role = (String) session.getAttribute("role");
-
-    if (fullName == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
 %>
 
 <!DOCTYPE html>

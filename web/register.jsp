@@ -22,13 +22,8 @@
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         int clubId = Integer.parseInt(request.getParameter("clubId"));
-
-        if (fullName == null || fullName.trim().isEmpty() || 
-            email == null || email.trim().isEmpty() || 
-            password == null || password.trim().isEmpty() || 
-            confirmPassword == null || confirmPassword.trim().isEmpty()) {
-            message = "Vui lòng điền đầy đủ thông tin!";
-        } else if (!password.equals(confirmPassword)) {
+ 
+        if (!password.equals(confirmPassword)) {
             message = "Mật khẩu xác nhận không khớp!";
         } else {
             UserDAO userDAO = new UserDAO();
@@ -44,7 +39,7 @@
 %>
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi,en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
