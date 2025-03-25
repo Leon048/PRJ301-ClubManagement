@@ -81,7 +81,7 @@ public class AddUserServlet extends HttpServlet {
         boolean success = userDAO.addUser(new User(0, fullName, email, password, role, clubId));
 
         if (success) {
-            response.sendRedirect("manage-users.jsp");
+            response.sendRedirect("add-success.jsp");
         } else {
             request.setAttribute("error", "Lỗi khi thêm người dùng. Email có thể đã tồn tại.");
             request.getRequestDispatcher("add-user.jsp").forward(request, response);

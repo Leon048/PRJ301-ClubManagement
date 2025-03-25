@@ -90,7 +90,7 @@ public class AddMemberServlet extends HttpServlet {
             UserDAO userDAO = new UserDAO();
             boolean success = userDAO.addMember(new User(fullName, email, password, role, clubId));
             if (success) {
-                response.sendRedirect("manage-members.jsp?success=Thêm thành viên thành công!");
+                response.sendRedirect("add-success.jsp");
             } else {
                 request.setAttribute("error", "Lỗi khi thêm thành viên. Email có thể đã tồn tại.");
                 request.getRequestDispatcher("add-member.jsp").forward(request, response);

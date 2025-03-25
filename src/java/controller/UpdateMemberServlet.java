@@ -88,7 +88,7 @@ public class UpdateMemberServlet extends HttpServlet {
             boolean success = userDAO.updateMember(new User(userId, fullName, password, role, clubId));
 
             if (success) {
-                response.sendRedirect("manage-members.jsp?success=Cập nhật thành viên thành công!");
+                response.sendRedirect("update-success.jsp");
             } else {
                 request.setAttribute("error", "Lỗi khi cập nhật thành viên.");
                 request.getRequestDispatcher("edit-member.jsp?userId=" + userId).forward(request, response);

@@ -86,7 +86,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             boolean success = userDAO.updateUser(new User(userId, fullName, null, password, role, clubId, null));
 
             if (success) {
-                response.sendRedirect("update-user.jsp?userId=" + userId + "&success=Cập nhật thành công!");
+                response.sendRedirect("update-success.jsp");
             } else {
                 request.setAttribute("error", "Lỗi khi cập nhật người dùng.");
                 request.getRequestDispatcher("update-user.jsp?userId=" + userId).forward(request, response);

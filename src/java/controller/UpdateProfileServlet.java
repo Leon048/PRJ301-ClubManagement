@@ -86,7 +86,7 @@ public class UpdateProfileServlet extends HttpServlet {
             boolean success = userDAO.updateUserProfile(email, fullName);
 
             if (success) {
-                response.sendRedirect("profile.jsp?success=Cập nhật thành công!");
+                response.sendRedirect("update-success.jsp");
             } else {
                 request.setAttribute("error", "Lỗi khi cập nhật thông tin.");
                 request.getRequestDispatcher("profile.jsp").forward(request, response);

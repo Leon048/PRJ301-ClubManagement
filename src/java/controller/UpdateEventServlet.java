@@ -98,7 +98,7 @@ public class UpdateEventServlet extends HttpServlet {
             boolean success = eventDAO.updateEvent(new Event(eventId, eventName, description, eventDate, location, clubId));
 
             if (success) {
-                response.sendRedirect("event-list.jsp?success=Cập nhật thành công!");
+                response.sendRedirect("update-success.jsp");
             } else {
                 request.setAttribute("error", "Lỗi khi cập nhật sự kiện.");
                 request.getRequestDispatcher("edit-event.jsp?eventId=" + eventId).forward(request, response);

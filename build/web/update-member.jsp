@@ -86,7 +86,6 @@
         <div class="mb-3">
             <label for="clubId" class="form-label">Câu lạc bộ</label>
             <select class="form-control" id="clubId" name="clubId">
-                <option value="0">Không có CLB</option>
                 <% for (Club club : clubs) { %>
                     <option value="<%= club.getClubId() %>" <%= (club.getClubId() == member.getClubId()) ? "selected" : "" %>>
                         <%= club.getClubName() %>

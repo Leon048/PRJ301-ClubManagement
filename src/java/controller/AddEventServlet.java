@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import model.Event;
 
 /**
@@ -68,7 +67,7 @@ public class AddEventServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -102,7 +101,7 @@ public class AddEventServlet extends HttpServlet {
             boolean success = eventDAO.addEvent(new Event(0, eventName, description, eventDate, location, clubId));
 
             if (success) {
-                response.sendRedirect("manage-events.jsp"); // Chuyển hướng về trang danh sách sự kiện
+                response.sendRedirect("add-success.jsp"); // Chuyển hướng về trang danh sách sự kiện
             } else {
                 request.setAttribute("error", "Lỗi khi thêm sự kiện. Vui lòng thử lại.");
                 request.getRequestDispatcher("add-event.jsp").forward(request, response);

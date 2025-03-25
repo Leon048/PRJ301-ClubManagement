@@ -89,7 +89,7 @@ public class EditUserServlet extends HttpServlet {
             boolean success = userDAO.updateUser(new User(userId, fullName, email, password, role, clubId));
 
             if (success) {
-                response.sendRedirect("manage-users.jsp");
+                response.sendRedirect("update-success.jsp");
             } else {
                 request.setAttribute("error", "Lỗi khi cập nhật.");
                 request.getRequestDispatcher("edit-user.jsp?userId=" + userId).forward(request, response);

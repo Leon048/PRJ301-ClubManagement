@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller;
 
-import dao.ClubDAO;
+import dao.EventDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,44 +14,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import model.Club;
+import model.Event;
 
 /**
  *
  * @author admin
  */
-public class EditClubServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+public class AddEventsServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditClubServlet</title>");
+            out.println("<title>Servlet AddEventsServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditClubServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddEventsServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -58,64 +56,74 @@ public class EditClubServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         processRequest(request, response);
-    }
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             // Nhận dữ liệu từ form
-            int clubId = Integer.parseInt(request.getParameter("clubId"));
-            String clubName = request.getParameter("clubName");
+            String eventName = request.getParameter("eventName");
             String description = request.getParameter("description");
-            String dateStr = request.getParameter("establishedDate");
+            String dateStr = request.getParameter("eventDate");
+            String location = request.getParameter("location");
+            String clubIdStr = request.getParameter("clubId");
 
             // Kiểm tra dữ liệu nhập vào
-            if (clubName == null || clubName.trim().isEmpty() || dateStr == null || dateStr.trim().isEmpty()) {
-                throw new IllegalArgumentException("Tên câu lạc bộ và ngày thành lập không được để trống!");
+            if (eventName == null || eventName.trim().isEmpty() ||
+                dateStr == null || dateStr.trim().isEmpty() ||
+                location == null || location.trim().isEmpty() ||
+                clubIdStr == null || clubIdStr.trim().isEmpty()) {
+                throw new IllegalArgumentException("Vui lòng nhập đầy đủ thông tin sự kiện!");
             }
 
-            // Chuyển đổi từ String (yyyy-MM-dd) sang java.sql.Date
+            // Chuyển đổi từ String (yyyy-MM-dd) sang java.util.Date
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date utilDate = sdf.parse(dateStr);
-            java.sql.Date establishedDate = new java.sql.Date(utilDate.getTime());
 
-            // Gọi DAO để cập nhật câu lạc bộ
-            ClubDAO clubDAO = new ClubDAO();
-            boolean success = clubDAO.updateClub(new Club(clubId, clubName, description, establishedDate));
+            // Chuyển từ java.util.Date sang java.sql.Date
+            java.sql.Date eventDate = new java.sql.Date(utilDate.getTime());
+
+            // Chuyển đổi ClubID sang số nguyên
+            int clubId = Integer.parseInt(clubIdStr);
+
+            // Gọi DAO để thêm sự kiện vào database
+            EventDAO eventDAO = new EventDAO();
+            boolean success = eventDAO.addEvent(new Event(0, eventName, description, eventDate, location, clubId));
 
             if (success) {
-                response.sendRedirect("update-success.jsp");
+                response.sendRedirect("add-success.jsp"); // Chuyển hướng về trang danh sách sự kiện
             } else {
-                request.setAttribute("error", "Lỗi khi cập nhật câu lạc bộ.");
-                request.getRequestDispatcher("edit-club.jsp?clubId=" + clubId).forward(request, response);
+                request.setAttribute("error", "Lỗi khi thêm sự kiện. Vui lòng thử lại.");
+                request.getRequestDispatcher("add-event.jsp").forward(request, response);
             }
         } catch (ParseException e) {
-            request.setAttribute("error", "Định dạng ngày không hợp lệ!");
-            request.getRequestDispatcher("edit-club.jsp").forward(request, response);
+            request.setAttribute("error", "Định dạng ngày không hợp lệ! Vui lòng nhập đúng định dạng yyyy-MM-dd.");
+            request.getRequestDispatcher("add-event.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Vui lòng chọn một câu lạc bộ hợp lệ.");
+            request.getRequestDispatcher("add-event.jsp").forward(request, response);
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("edit-club.jsp").forward(request, response);
+            request.getRequestDispatcher("add-event.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi. Vui lòng thử lại!");
-            request.getRequestDispatcher("edit-club.jsp").forward(request, response);
+            request.getRequestDispatcher("add-event.jsp").forward(request, response);
         }
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

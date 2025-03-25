@@ -41,7 +41,7 @@
             <div class="alert alert-danger"><%= error %></div>
         <% } %>
 
-        <form action="add-event" method="post" class="card p-4 shadow-lg">
+        <form action="add-events" method="post" class="card p-4 shadow-lg">
             <div class="mb-3">
                 <label for="eventName" class="form-label">Tên sự kiện</label>
                 <input type="text" class="form-control" id="eventName" name="eventName" required>

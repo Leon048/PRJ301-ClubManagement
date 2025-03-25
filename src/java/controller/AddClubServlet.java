@@ -97,7 +97,7 @@ public class AddClubServlet extends HttpServlet {
             boolean success = clubDAO.addClub(new Club(0, clubName, description, establishedDate));
 
             if (success) {
-                response.sendRedirect("manage-clubs.jsp"); // Chuyển hướng về trang danh sách câu lạc bộ
+                response.sendRedirect("add-success.jsp"); // Chuyển hướng về trang danh sách câu lạc bộ
             } else {
                 request.setAttribute("error", "Lỗi khi thêm câu lạc bộ. Vui lòng thử lại.");
                 request.getRequestDispatcher("add-club.jsp").forward(request, response);

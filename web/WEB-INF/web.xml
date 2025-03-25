@@ -76,6 +76,10 @@
         <servlet-name>AddEventServlet</servlet-name>
         <servlet-class>controller.AddEventServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddEventsServlet</servlet-name>
+        <servlet-class>controller.AddEventsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -151,5 +155,9 @@
     <servlet-mapping>
         <servlet-name>AddEventServlet</servlet-name>
         <url-pattern>/add-event</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddEventsServlet</servlet-name>
+        <url-pattern>/add-events</url-pattern>
     </servlet-mapping>
 </web-app>
